@@ -1,43 +1,38 @@
-import org.apache.spark.sql.SparkSession
-import org.apache.spark.sql.streaming.Trigger
-import org.apache.spark.sql.Dataset
-import org.apache.spark.sql.Row
+import org.apache.spark.{SparkConf, SparkContext}
+import org.apache.hadoop.fs.{FileSystem, Path}
 import java.io.File
-import java.nio.file.{Files, Paths, StandardCopyOption}
 
 object ImageProducer {
 
   def main(args: Array[String]): Unit = {
 
-    val spark = SparkSession.builder()
-      .appName("ImageProducer")
-      .master("local[2]")
-      .getOrCreate()
+    val conf = new SparkConf()
+      .setAppName("ImageProducer")
+      .setMaster("local[2]")
 
-    spark.sparkContext.setLogLevel("WARN")
+    val sc = new SparkContext(conf)
+    sc.setLogLevel("WARN")
 
-    import spark.implicits._
+    val fs = FileSystem.get(sc.hadoopConfiguration)
 
     val trainInput  = "Data/train"
     val valInput    = "Data/val"
     val trainOutput = "output/train"
     val valOutput   = "output/val"
     val batchSize   = 5
-    val trigger     = "15 seconds"
+    val interval    = 15000 // 15 secondes
 
     // Extensions d'images acceptées
-    val imageExtensions = Set("jpg", "jpeg", "png", "bmp", "tiff")
+    val imageExtensions = Set("jpg", "jpeg", "png")
 
     // Charger les images d'un dossier avec ses sous-dossiers maladies
-    // Retourne Array[(cheminAbsolu, nomMaladie, outputBase)]
     def loadImages(baseDir: String, outputBase: String): Array[(String, String, String)] =
       new File(baseDir)
         .listFiles()
         .filter(_.isDirectory)
         .flatMap { diseaseDir =>
-          // Créer le sous-dossier maladie dans output automatiquement
-          val outDisease = new File(s"$outputBase/${diseaseDir.getName}")
-          if (!outDisease.exists()) outDisease.mkdirs()
+          val outDisease = new Path(s"$outputBase/${diseaseDir.getName}")
+          if (!fs.exists(outDisease)) fs.mkdirs(outDisease)
 
           diseaseDir.listFiles()
             .filter(f => f.isFile && imageExtensions.contains(
@@ -47,57 +42,38 @@ object ImageProducer {
             .map(f => (f.getAbsolutePath, diseaseDir.getName, outputBase))
         }
 
-    // train en premier (une seule fois), val ensuite (attend nouvelles images)
     val trainImages = loadImages(trainInput, trainOutput)
     val valImages   = loadImages(valInput, valOutput)
+    val allImages   = trainImages ++ valImages
 
-    // train passe en premier, val ensuite
-    val allImages = trainImages ++ valImages
-
-    println("=== ImageProducer démarré ===")
+    println("=== ImageProducer demarre ===")
     println(s"Train       : ${trainImages.length} images")
     println(s"Val         : ${valImages.length} images")
     println(s"Total       : ${allImages.length} images")
     println(s"Batch size  : $batchSize")
-    println(s"Trigger     : $trigger")
+    println(s"Intervalle  : ${interval/1000} secondes")
     println("=============================\n")
 
-    // Diviser en batches de batchSize
-    val batches      = allImages.grouped(batchSize).toSeq
-    val trainBatches = math.ceil(trainImages.length.toDouble / batchSize).toInt
+    // Traiter train puis val en une seule passe
+    allImages.grouped(batchSize).zipWithIndex.foreach { case (batch, idx) =>
+      val phase = if (batch.head._3 == trainOutput) "TRAIN" else "VAL"
 
-    // Streaming DataFrame avec rate source
-    val imageDF = spark.readStream
-      .format("rate")
-      .option("rowsPerSecond", 1)
-      .load()
+      val rdd = sc.parallelize(batch)
 
-    val query = imageDF.writeStream
-      .trigger(Trigger.ProcessingTime(trigger))
-      .foreachBatch { (batchDF: Dataset[Row], batchId: Long) =>
+      println(s"--- Batch $idx [$phase] : ${batch.length} image(s) ---")
 
-        // train passe une seule fois, val attend les nouvelles images
-        val idx = if (batchId < trainBatches) {
-          batchId.toInt
-        } else {
-          trainBatches + ((batchId - trainBatches) % (batches.length - trainBatches)).toInt
-        }
-
-        val batch = batches(idx)
-        val phase = if (batchId < trainBatches) "TRAIN" else "VAL"
-
-        println(s"--- Batch $batchId [$phase] : ${batch.length} image(s) ---")
-
-        batch.foreach { case (filePath, diseaseDir, outputBase) =>
-          val srcPath  = Paths.get(filePath)
-          val fileName = srcPath.getFileName
-          val destPath = Paths.get(s"$outputBase/$diseaseDir").resolve(fileName)
-          Files.copy(srcPath, destPath, StandardCopyOption.REPLACE_EXISTING)
-          println(s"  Copié : [$phase/$diseaseDir] $fileName")
-        }
+      rdd.foreach { case (filePath, diseaseDir, outputBase) =>
+        val src        = new Path(filePath)
+        val dest       = new Path(s"$outputBase/$diseaseDir/${src.getName}")
+        val hadoopFs   = FileSystem.get(new org.apache.hadoop.conf.Configuration())
+        hadoopFs.copyFromLocalFile(src, dest)
+        println(s"  Copiee : [$outputBase/$diseaseDir] ${src.getName}")
       }
-      .start()
 
-    query.awaitTermination()
+      Thread.sleep(interval)
+    }
+
+    println("\n=== Toutes les images ont ete traitees. Producer arrete. ===")
+    sc.stop()
   }
 }
