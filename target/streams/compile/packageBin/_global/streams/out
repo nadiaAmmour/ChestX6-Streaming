@@ -1,7 +1,19 @@
-[0m[[0m[0mdebug[0m] [0m[0mPackaging C:\Users\nadia\.git\ChestX6-Streaming\target\scala-2.12\chestx6-streaming_2.12-1.0.jar ...[0m
+[0m[[0m[0mdebug[0m] [0m[0mPackaging C:\Users\bouac\Desktop\Projet Spark streming\ChestX6-Streaming\target\scala-2.12\chestx6-streaming_2.12-1.0.jar ...[0m
 [0m[[0m[0mdebug[0m] [0m[0mInput file mappings:[0m
+[0m[[0m[0mdebug[0m] [0m[0m	CheckParquet$.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  C:\Users\bouac\Desktop\Projet Spark streming\ChestX6-Streaming\target\scala-2.12\classes\CheckParquet$.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	CheckParquet.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  C:\Users\bouac\Desktop\Projet Spark streming\ChestX6-Streaming\target\scala-2.12\classes\CheckParquet.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	ImageConsumer$$typecreator1$1.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  C:\Users\bouac\Desktop\Projet Spark streming\ChestX6-Streaming\target\scala-2.12\classes\ImageConsumer$$typecreator1$1.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	ImageConsumer$$typecreator2$1.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  C:\Users\bouac\Desktop\Projet Spark streming\ChestX6-Streaming\target\scala-2.12\classes\ImageConsumer$$typecreator2$1.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	ImageConsumer$.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  C:\Users\bouac\Desktop\Projet Spark streming\ChestX6-Streaming\target\scala-2.12\classes\ImageConsumer$.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	ImageConsumer.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  C:\Users\bouac\Desktop\Projet Spark streming\ChestX6-Streaming\target\scala-2.12\classes\ImageConsumer.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	ImageProducer$.class[0m
-[0m[[0m[0mdebug[0m] [0m[0m	  C:\Users\nadia\.git\ChestX6-Streaming\target\scala-2.12\classes\ImageProducer$.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  C:\Users\bouac\Desktop\Projet Spark streming\ChestX6-Streaming\target\scala-2.12\classes\ImageProducer$.class[0m
 [0m[[0m[0mdebug[0m] [0m[0m	ImageProducer.class[0m
-[0m[[0m[0mdebug[0m] [0m[0m	  C:\Users\nadia\.git\ChestX6-Streaming\target\scala-2.12\classes\ImageProducer.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  C:\Users\bouac\Desktop\Projet Spark streming\ChestX6-Streaming\target\scala-2.12\classes\ImageProducer.class[0m
 [0m[[0m[0mdebug[0m] [0m[0mDone packaging.[0m

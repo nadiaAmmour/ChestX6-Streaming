@@ -1,0 +1,16 @@
+# Spark
+target/
+checkpoint/
+output/
+
+# IntelliJ
+.idea/
+*.iml
+
+# sbt
+.bsp/
+project/target/
+project/project/target/
+
+# Logs
+*.log
