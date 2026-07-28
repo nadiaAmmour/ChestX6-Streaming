@@ -20,7 +20,7 @@ object ImageProducer {
     val trainOutput = "output/train"
     val valOutput   = "output/val"
     val batchSize   = 5
-    val interval    = 15000 // 15 secondes
+    val interval    = 5000 // 5 secondes
 
     // Extensions d'images acceptées
     val imageExtensions = Set("jpg", "jpeg", "png")
