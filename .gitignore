@@ -1,16 +1,34 @@
-# Spark
-target/
-checkpoint/
+# Données et fichiers generes
+Data/
 output/
+results/
+checkpoint/
+*.log
 
-# IntelliJ
-.idea/
-*.iml
+# Modeles generes (regenerables via le notebook)
+*.onnx
+*.joblib
+*.pkl
 
-# sbt
-.bsp/
+# Python
+venv/
+.venv/
+__pycache__/
+*.pyc
+
+# Scala / sbt
+target/
 project/target/
 project/project/target/
+.bsp/
+.bloop/
+.metals/
 
-# Logs
-*.log
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# Divers
+.DS_Store
+.env
