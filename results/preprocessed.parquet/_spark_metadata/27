@@ -1,3 +1,0 @@
-v1
-{"path":"file:///C:/Users/bouac/Desktop/Projet%20Spark%20streming/ChestX6-Streaming/results/preprocessed.parquet/part-00000-5e769330-4e02-49bf-8c29-753181430985-c000.snappy.parquet","size":231922,"isDir":false,"modificationTime":1782580156974,"blockReplication":1,"blockSize":33554432,"action":"add"}
-{"path":"file:///C:/Users/bouac/Desktop/Projet%20Spark%20streming/ChestX6-Streaming/results/preprocessed.parquet/part-00001-a42b385f-be45-4489-81c7-51c83159c048-c000.snappy.parquet","size":127893,"isDir":false,"modificationTime":1782580156955,"blockReplication":1,"blockSize":33554432,"action":"add"}
