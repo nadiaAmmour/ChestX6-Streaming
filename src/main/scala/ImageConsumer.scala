@@ -26,7 +26,7 @@ object OnnxPredictor {
   lazy val session: OrtSession =
     env.createSession(MODEL_PATH, new OrtSession.SessionOptions())
 
-  // Predit le label (comme avant).
+  // Predit le label (indice de la classe).
   def predict(features: Array[Float]): Int = {
     val tensor = OnnxTensor.createTensor(env, Array(features))
     val results = session.run(java.util.Collections.singletonMap("float_input", tensor))
@@ -247,3 +247,4 @@ object ImageConsumer {
     spark.streams.awaitAnyTermination()
   }
 }
+
